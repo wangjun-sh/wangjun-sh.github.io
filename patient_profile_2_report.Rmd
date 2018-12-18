@@ -1,0 +1,104 @@
+---
+title: "Patient Profile"
+author: "John"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.width=12, fig.height=8, warnings=FALSE, messages=FALSE)
+
+# page header/footer
+# https://stackoverflow.com/questions/46027246/in-r-markdown-create-header-footer-on-every-page-regardless-of-output-type-pdf
+
+library(knitr)
+library(markdown)
+library(rmarkdown)
+library(tidyverse)
+library(haven)
+library(DT)
+
+# subject <- "01-701-1015"
+
+dm <- read_xpt("./SDTM/dm.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN)
+
+mh <- read_xpt("./SDTM/mh.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(MHSEQ)
+
+ex <- read_xpt("./SDTM/ex.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(EXSEQ)
+
+ae <- read_xpt("./SDTM/ae.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(AESEQ)
+
+cm <- read_xpt("./SDTM/cm.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(CMSEQ)
+
+```
+
+
+# Subject `r subject`, generated on `r Sys.Date()`.
+
+```{r, echo=FALSE}
+subjectinfo <- select(dm, USUBJID, SEX, AGE, RACE)
+kable(subjectinfo)
+```
+```{r, echo=FALSE}
+subjectinfo <- select(dm, ARM, RFXSTDTC, RFXENDTC)
+kable(subjectinfo)
+```
+
+## Description
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Demographics
+```{r demog, echo=FALSE}
+#datatable(dm)
+kable(dm)
+```
+
+## Medical History
+```{r}
+kable(mh)
+```
+
+# Exposure Summary
+```{r}
+kable(ex)
+```
+
+## Adverse Event
+```{r}
+kable(ae)
+```
+
+## Concomitant Medications
+```{r}
+kable(cm)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
