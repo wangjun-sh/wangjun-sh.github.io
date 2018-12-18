@@ -2,10 +2,15 @@
 title: "Patient Profile"
 author: "John"
 output: 
+  word_document:
+    toc: true
+    toc_depth: 3
+    reference_docx: patient_profile_2_report_template.docx
   html_document:
     toc: true
     toc_depth: 3
     number_sections: true
+classoption: landscape
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +26,7 @@ library(tidyverse)
 library(haven)
 library(DT)
 
-# subject <- "01-701-1015"
+subject <- "01-701-1015"
 
 dm <- read_xpt("./SDTM/dm.xpt") %>%
   filter(USUBJID==subject) %>%
@@ -36,6 +41,26 @@ ex <- read_xpt("./SDTM/ex.xpt") %>%
   filter(USUBJID==subject) %>%
   select(-STUDYID,-DOMAIN) %>%
   arrange(EXSEQ)
+
+lbchem <- read_xpt("./SDTM/lbch.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(LBSEQ)
+
+lbhema <- read_xpt("./SDTM/lbhe.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(LBSEQ)
+
+lburine <- read_xpt("./SDTM/lbur.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(LBSEQ)
+
+vs <- read_xpt("./SDTM/vs.xpt") %>%
+  filter(USUBJID==subject) %>%
+  select(-STUDYID,-DOMAIN) %>%
+  arrange(VSSEQ)
 
 ae <- read_xpt("./SDTM/ae.xpt") %>%
   filter(USUBJID==subject) %>%
@@ -76,21 +101,74 @@ kable(dm)
 ## Medical History
 ```{r}
 kable(mh)
+
+if(nrow(mh)==0){
+  cat("No data for this display")
+}
 ```
+
 
 # Exposure Summary
 ```{r}
 kable(ex)
+
+if(nrow(ex)==0){
+  cat("No data for this display")
+}
+```
+
+# Safety Data
+## Lab Chemistry
+```{r}
+kable(lbchem)
+
+if(nrow(lbchem)==0){
+  cat("No data for this display")
+}
+```
+
+## Lab Hematology
+```{r}
+kable(lbhema)
+
+if(nrow(lbhema)==0){
+  cat("No data for this display")
+}
+```
+
+## Lab Urinalysis
+```{r}
+kable(lburine)
+
+if(nrow(lburine)==0){
+  cat("No data for this display")
+}
+```
+
+## Vital Signs
+```{r}
+kable(vs)
+
+if(nrow(vs)==0){
+  cat("No data for this display")
+}
 ```
 
 ## Adverse Event
 ```{r}
 kable(ae)
-```
 
+if(nrow(ae)==0){
+  cat("No data for this display")
+}
+```
 ## Concomitant Medications
 ```{r}
 kable(cm)
+
+if(nrow(cm)==0){
+  cat("No data for this display")
+}
 ```
 
 ## Including Plots
