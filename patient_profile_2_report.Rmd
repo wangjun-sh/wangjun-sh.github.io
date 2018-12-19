@@ -13,6 +13,21 @@ output:
 classoption: landscape
 ---
 
+<style>
+table {
+    border-collapse: collapse; 
+    margin-top: 1em; 
+    margin-bottom: 1em;
+    border-top: medium solid gray;
+    border-bottom: medium solid gray;
+  }
+tr:hover {background-color:#f5f5f5}
+tr:nth-child(even) {background-color:#f2f2f2}
+th {background-color:#f9f9f9}
+  
+</style>
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, fig.width=12, fig.height=8, warnings=FALSE, messages=FALSE)
 
@@ -25,12 +40,13 @@ library(rmarkdown)
 library(tidyverse)
 library(haven)
 library(DT)
-library(kableExtra)
+#library(kableExtra)
 library(Hmisc)
 library(plotly)
+#library(htmlTable)
 
 
-subject <- "01-701-1015"
+# subject <- "01-701-1015" ## unmask it for testing, mask it for production
 
 dm <- read_xpt("./SDTM/dm.xpt") %>%
   filter(USUBJID==subject) %>%
@@ -84,15 +100,21 @@ cm <- read_xpt("./SDTM/cm.xpt") %>%
 ```{r, echo=FALSE}
 subjectinfo <- select(dm, USUBJID, SEX, AGE, RACE)
 names(subjectinfo) <- paste0(label(subjectinfo)," (",names(subjectinfo),")") 
-kable(subjectinfo) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+
+kable(subjectinfo)
+# kable(subjectinfo) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
+# htmlTable(subjectinfo,rnames=FALSE)
 ```
 
 ```{r, echo=FALSE}
 subjectinfo <- select(dm, ARM, RFXSTDTC, RFXENDTC)
 names(subjectinfo) <- paste0(label(subjectinfo)," (",names(subjectinfo),")") 
-kable(subjectinfo) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+
+kable(subjectinfo)
+# kable(subjectinfo) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
+# htmlTable(subjectinfo,rnames=FALSE)
 ```
 
 ## Description
@@ -108,9 +130,12 @@ dm  <- dm %>%
 
 names(dm) <- paste0(label(dm)," (",names(dm),")") 
 
-dm %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(dm)
+# dm %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
+# htmlTable(dm,rnames=FALSE)
+          
 ```
 
 ## Medical History
@@ -120,9 +145,14 @@ mh <- mh %>%
 
 names(mh) <- paste0(label(mh)," (",names(mh),")")  ## label() from Hmisc package
 
-mh %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(mh)
+# mh %>%
+#   kable() %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
+
+# htmlTable(mh,
+#           col.rgroup = c("none", "#F7F7F7"), 
+#           rnames=FALSE)
 
 if(nrow(mh)==0){
   cat("No data for this display")
@@ -135,8 +165,9 @@ if(nrow(mh)==0){
 
 names(ex) <- paste0(label(ex)," (",names(ex),")")
 
-kable(ex) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(ex)
+# kable(ex) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover")) 
 
 if(nrow(ex)==0){
   cat("No data for this display")
@@ -149,8 +180,9 @@ if(nrow(ex)==0){
 
 names(lbchem) <- paste0(label(lbchem)," (",names(lbchem),")")
 
-kable(lbchem) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(lbchem)
+# kable(lbchem) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lbchem)==0){
   cat("No data for this display")
@@ -162,8 +194,9 @@ if(nrow(lbchem)==0){
 
 names(lbhema) <- paste0(label(lbhema)," (",names(lbhema),")")
 
-kable(lbhema) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(lbhema)
+# kable(lbhema) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lbhema)==0){
   cat("No data for this display")
@@ -175,8 +208,9 @@ if(nrow(lbhema)==0){
 
 names(lburine) <- paste0(label(lburine)," (",names(lburine),")")
 
-kable(lburine) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(lburine)
+# kable(lburine) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lburine)==0){
   cat("No data for this display")
@@ -188,8 +222,9 @@ if(nrow(lburine)==0){
 
 names(vs) <- paste0(label(vs)," (",names(vs),")")
 
-kable(vs) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(vs)
+# kable(vs) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(vs)==0){
   cat("No data for this display")
@@ -199,10 +234,14 @@ if(nrow(vs)==0){
 # Adverse Event
 ```{r ae}
 
+ae <- ae %>%
+  select(-AELLTCD,-AEPTCD,-AEHLTCD,-AEHLGTCD,-AEBODSYS,-AEBDSYCD,-AESOCCD)
+
 names(ae) <- paste0(label(ae)," (",names(ae),")")
 
-kable(ae) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(ae)
+# kable(ae) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(ae)==0){
   cat("No data for this display")
@@ -213,15 +252,16 @@ if(nrow(ae)==0){
 
 names(cm) <- paste0(label(cm)," (",names(cm),")")
 
-kable(cm) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+kable(cm)
+# kable(cm) %>%
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(cm)==0){
   cat("No data for this display")
 }
 ```
 
-## Including Plots
+# Including Plots
 
 You can also embed plots, for example:
 

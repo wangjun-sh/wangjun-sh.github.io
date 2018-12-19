@@ -13,6 +13,8 @@ usubjid <- dm %>%
   select(USUBJID) %>%
   distinct()
 
+usubjid <- usubjid[1:10,] # select the first 10 obs
+
 # https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html
 for (subject in unique(usubjid$USUBJID)){
   rmarkdown::render('./patient_profile_2_report.Rmd',  # file 2
