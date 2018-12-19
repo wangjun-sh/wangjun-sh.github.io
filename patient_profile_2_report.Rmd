@@ -2,14 +2,14 @@
 title: "Patient Profile"
 author: "John"
 output: 
-  word_document:
-    toc: true
-    toc_depth: 3
-    reference_docx: patient_profile_2_report_template.docx
   html_document:
     toc: true
     toc_depth: 3
     number_sections: true
+  word_document:
+    toc: true
+    toc_depth: 3
+    reference_docx: patient_profile_2_report_template.docx
 classoption: landscape
 ---
 
@@ -25,6 +25,8 @@ library(rmarkdown)
 library(tidyverse)
 library(haven)
 library(DT)
+library(kableExtra)
+
 
 subject <- "01-701-1015"
 
@@ -81,6 +83,7 @@ cm <- read_xpt("./SDTM/cm.xpt") %>%
 subjectinfo <- select(dm, USUBJID, SEX, AGE, RACE)
 kable(subjectinfo)
 ```
+
 ```{r, echo=FALSE}
 subjectinfo <- select(dm, ARM, RFXSTDTC, RFXENDTC)
 kable(subjectinfo)
@@ -100,7 +103,8 @@ kable(dm)
 
 ## Medical History
 ```{r}
-kable(mh)
+kable(mh) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(mh)==0){
   cat("No data for this display")
@@ -110,7 +114,8 @@ if(nrow(mh)==0){
 
 # Exposure Summary
 ```{r}
-kable(ex)
+kable(ex) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(ex)==0){
   cat("No data for this display")
@@ -120,7 +125,8 @@ if(nrow(ex)==0){
 # Safety Data
 ## Lab Chemistry
 ```{r}
-kable(lbchem)
+kable(lbchem) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lbchem)==0){
   cat("No data for this display")
@@ -129,7 +135,8 @@ if(nrow(lbchem)==0){
 
 ## Lab Hematology
 ```{r}
-kable(lbhema)
+kable(lbhema) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lbhema)==0){
   cat("No data for this display")
@@ -138,7 +145,8 @@ if(nrow(lbhema)==0){
 
 ## Lab Urinalysis
 ```{r}
-kable(lburine)
+kable(lburine) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(lburine)==0){
   cat("No data for this display")
@@ -147,7 +155,8 @@ if(nrow(lburine)==0){
 
 ## Vital Signs
 ```{r}
-kable(vs)
+kable(vs) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(vs)==0){
   cat("No data for this display")
@@ -156,7 +165,8 @@ if(nrow(vs)==0){
 
 ## Adverse Event
 ```{r}
-kable(ae)
+kable(ae) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(ae)==0){
   cat("No data for this display")
@@ -164,7 +174,8 @@ if(nrow(ae)==0){
 ```
 ## Concomitant Medications
 ```{r}
-kable(cm)
+kable(cm) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(cm)==0){
   cat("No data for this display")
