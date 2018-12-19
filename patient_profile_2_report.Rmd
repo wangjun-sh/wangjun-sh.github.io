@@ -26,6 +26,8 @@ library(tidyverse)
 library(haven)
 library(DT)
 library(kableExtra)
+library(Hmisc)
+library(plotly)
 
 
 subject <- "01-701-1015"
@@ -81,12 +83,16 @@ cm <- read_xpt("./SDTM/cm.xpt") %>%
 
 ```{r, echo=FALSE}
 subjectinfo <- select(dm, USUBJID, SEX, AGE, RACE)
-kable(subjectinfo)
+names(subjectinfo) <- paste0(label(subjectinfo)," (",names(subjectinfo),")") 
+kable(subjectinfo) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ```{r, echo=FALSE}
 subjectinfo <- select(dm, ARM, RFXSTDTC, RFXENDTC)
-kable(subjectinfo)
+names(subjectinfo) <- paste0(label(subjectinfo)," (",names(subjectinfo),")") 
+kable(subjectinfo) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ## Description
@@ -96,14 +102,26 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ## Demographics
-```{r demog, echo=FALSE}
-#datatable(dm)
-kable(dm)
+```{r demog}
+dm  <- dm %>%
+  select(USUBJID,AGE,SEX,RACE,ETHNIC,ARM,ACTARM,COUNTRY,SITEID,DMDTC)
+
+names(dm) <- paste0(label(dm)," (",names(dm),")") 
+
+dm %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ## Medical History
-```{r}
-kable(mh) %>%
+```{r mh}
+mh <- mh %>% 
+  select(MHSEQ,MHCAT,MHTERM,MHDECOD,MHSEV,MHSTDTC) 
+
+names(mh) <- paste0(label(mh)," (",names(mh),")")  ## label() from Hmisc package
+
+mh %>%
+  kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
 if(nrow(mh)==0){
@@ -113,7 +131,10 @@ if(nrow(mh)==0){
 
 
 # Exposure Summary
-```{r}
+```{r ex}
+
+names(ex) <- paste0(label(ex)," (",names(ex),")")
+
 kable(ex) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -124,7 +145,10 @@ if(nrow(ex)==0){
 
 # Safety Data
 ## Lab Chemistry
-```{r}
+```{r lbchem}
+
+names(lbchem) <- paste0(label(lbchem)," (",names(lbchem),")")
+
 kable(lbchem) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -134,7 +158,10 @@ if(nrow(lbchem)==0){
 ```
 
 ## Lab Hematology
-```{r}
+```{r lbhema}
+
+names(lbhema) <- paste0(label(lbhema)," (",names(lbhema),")")
+
 kable(lbhema) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -144,7 +171,10 @@ if(nrow(lbhema)==0){
 ```
 
 ## Lab Urinalysis
-```{r}
+```{r lburine}
+
+names(lburine) <- paste0(label(lburine)," (",names(lburine),")")
+
 kable(lburine) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -154,7 +184,10 @@ if(nrow(lburine)==0){
 ```
 
 ## Vital Signs
-```{r}
+```{r vs}
+
+names(vs) <- paste0(label(vs)," (",names(vs),")")
+
 kable(vs) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -163,8 +196,11 @@ if(nrow(vs)==0){
 }
 ```
 
-## Adverse Event
-```{r}
+# Adverse Event
+```{r ae}
+
+names(ae) <- paste0(label(ae)," (",names(ae),")")
+
 kable(ae) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -172,8 +208,11 @@ if(nrow(ae)==0){
   cat("No data for this display")
 }
 ```
-## Concomitant Medications
-```{r}
+# Concomitant Medications
+```{r cm}
+
+names(cm) <- paste0(label(cm)," (",names(cm),")")
+
 kable(cm) %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
@@ -187,7 +226,12 @@ if(nrow(cm)==0){
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
+# plot(pressure)
+p <- ggplot(data=pressure,mapping=aes(x=pressure,y=temperature)) +
+  geom_point(size=2) +
+  geom_line() +
+  theme_bw()
+ggplotly(p)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
